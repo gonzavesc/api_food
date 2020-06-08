@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 from sqlalchemy import create_engine
 from json import dumps
 import pymongo
-
+import upload_food
 app = Flask(__name__)
 api = Api(app)
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -17,7 +17,11 @@ class Food_bar(Resource):
     def get(seld,code):
         result = mycol.find({'code' : code},{'product_name' : 1,'nutriments':1})
         return result[0]
-
+@app.route('/food/upload', methods=['POST'])
+def create_task():
+    print(request.json)
+    upload_food.upload_food(request.json)
+    return {'task': "hello"}
 api.add_resource(Food, '/food')
 api.add_resource(Food_bar, '/food/<code>')
 
